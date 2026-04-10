@@ -115,13 +115,9 @@ public:
 	const FSvoTile* GetTileForLink(const FSvoNodeLink& NodeLink) const;
 	FORCEINLINE FSvoTile* GetTileForLink(const FSvoNodeLink& NodeLink);
 
-	typedef FMapValueIterator<TMap<uint32, FSvoTile>, TMap<uint32, FSvoTile>::TRangedForIterator> FTileIterator;
-	typedef FMapValueIterator<const TMap<uint32, FSvoTile>, TMap<uint32, FSvoTile>::TRangedForConstIterator> FTileConstIterator;
-
-	// Returns all the active tiles in an iterator you can use with a ranged for
-	//  Ex: for (FSvoTile& CurTile : GetTiles())
-	FTileIterator GetTiles() { return Tiles; }
-	FTileConstIterator GetTiles() const { return Tiles; }
+	// Returns all the active tiles
+	TMap<uint32, FSvoTile>& GetTiles() { return Tiles; }
+	const TMap<uint32, FSvoTile>& GetTiles() const { return Tiles; }
 
 	// Returns the number of active tiles
 	int32 GetNumTiles() const {	return Tiles.Num(); }

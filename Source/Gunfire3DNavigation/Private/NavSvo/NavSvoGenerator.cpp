@@ -915,7 +915,7 @@ void FNavSvoGenerator::RestrictBuildingToActiveTiles(bool bInRestrictBuildingToA
 		{
 			if (const FEditableSvo* Octree = GetOctree())
 			{
-				for (const FSvoTile& Tile : Octree->GetTiles())
+				for (auto& [TileID, Tile] : Octree->GetTiles())
 				{
 					WhitelistedTiles.Add(Tile.GetCoord());
 				}

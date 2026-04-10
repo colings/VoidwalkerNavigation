@@ -119,7 +119,7 @@ void FEditableSvo::AssumeTilesFrom(FSparseVoxelOctree& Source, bool bPreserveNei
 	{
 		BeginBatchEdit();
 		{
-			for (FSvoTile& Tile : Source.GetTiles())
+			for (auto& [TileID, Tile] : Source.GetTiles())
 			{
 				AssumeTile(Tile, bPreserveNeighborLinks);
 			}
@@ -166,7 +166,7 @@ void FEditableSvo::RemoveMatchingTiles(const FSparseVoxelOctree& Source)
 	{
 		BeginBatchEdit();
 		{
-			for (const FSvoTile& Tile : Source.GetTiles())
+			for (auto& [TileID, Tile] : Source.GetTiles())
 			{
 				RemoveTileAtCoord(Tile.GetCoord());
 			}

@@ -198,7 +198,7 @@ void FNavSvoSceneProxy::GatherData(const AGunfire3DNavData* NavData, TArray<FTil
 		{
 			TilesOut.Reserve(Octree->GetNumTiles());
 
-			for (const FSvoTile& Tile : Octree->GetTiles())
+			for (auto& [TileID, Tile] : Octree->GetTiles())
 			{
 				FTileBuildData& TileData = TilesOut.Add_GetRef({ NavData, Octree, Tile });
 

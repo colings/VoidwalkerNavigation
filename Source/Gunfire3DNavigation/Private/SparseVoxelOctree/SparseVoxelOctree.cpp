@@ -89,7 +89,7 @@ void FSparseVoxelOctree::GetBounds(FBox& OutBounds) const
 	const float TileResolution = Config.GetResolutionForLayer(Config.GetTileLayerIndex());
 	const FVector LayerExtent(TileResolution * 0.5f);
 
-	for (const FSvoTile& Tile : GetTiles())
+	for (auto& [TileID, Tile] : GetTiles())
 	{
 		const FVector TileLocation = Config.TileCoordToLocation(Tile.GetCoord());
 		OutBounds += (TileLocation - LayerExtent);
@@ -105,13 +105,13 @@ void FSparseVoxelOctree::LinkNeighbors()
 		return;
 
 	// Link all tiles first so the nodes can link to other tiles if needed.
-	for (const FSvoTile& Tile : GetTiles())
+	for (auto& [TileID, Tile] : GetTiles())
 	{
 		LinkNeighborsForNode(Tile.GetSelfLink());
 	}
 
 	// Now link all nodes for each tile, from the lowest resolution to the highest
-	for (const FSvoTile& Tile : GetTiles())
+	for (auto& [TileID, Tile] : GetTiles())
 	{
 		for (int8 LayerIdx = (int8)Config.GetTileLayerIndex() - 1; LayerIdx >= SVO_LEAF_LAYER; --LayerIdx)
 		{
@@ -1145,7 +1145,7 @@ void FSparseVoxelOctree::VerifyNodeData(bool VerifyExternalLinks) const
 	ensureAlways(Tiles.Num() <= MaxTiles);
 
 	// Verify each tile
-	for (const FSvoTile& Tile : GetTiles())
+	for (auto& [TileID, Tile] : GetTiles())
 	{
 		if (VerifyExternalLinks)
 		{

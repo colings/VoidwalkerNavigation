@@ -3,64 +3,6 @@
 #pragma once
 
 //
-// A helper for returning the values in a map as a ranged for iterator without
-// duplicating the values into an array.
-//
-// Usage:
-//
-//	typedef FMapValueIterator<TMap<uint32, FMyClass>, TMap<uint32, FMyClass>::TRangedForIterator> FMyClassIterator;
-//
-//	FMyClassIterator GetMyClasses()
-//	{
-//		return MyClassMap;
-//	}
-//
-//	for (FMyClass& CurClass : GetMyClasses())
-//	{
-//		...
-//	}
-//
-template<typename MapType, typename IteratorType>
-class FMapValueIterator
-{
-public:
-	FMapValueIterator(MapType& MapIn) : Map(MapIn) {}
-
-	struct FRangedForIterator
-	{
-		explicit FRangedForIterator(IteratorType ItIn)
-			: It(ItIn)
-		{}
-
-		auto& operator*() const
-		{
-			return It.Value();
-		}
-
-		FRangedForIterator& operator++()
-		{
-			++It;
-			return *this;
-		}
-
-		friend bool operator!=(const FRangedForIterator& A, const FRangedForIterator& B)
-		{
-			return A.It != B.It;
-		}
-
-	private:
-		IteratorType It;
-	};
-
-	// STL-like iterators to enable range-based for loop support.
-	FORCEINLINE FRangedForIterator		begin() { return FRangedForIterator(Map.begin()); }
-	FORCEINLINE FRangedForIterator		end() { return FRangedForIterator(Map.end()); }
-
-private:
-	MapType& Map;
-};
-
-//
 // A helper for only returning values in an array that pass a check.
 // Todo: Should templatize the condition, right now it expects a function called IsActive.
 //
