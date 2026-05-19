@@ -7,8 +7,8 @@
 
 FSvoNodeLink FSvoNode::GetNeighborLink(const FSvoTile& ParentTile, ESvoNeighbor Neighbor) const
 {
-	ensure(Neighbor != ESvoNeighbor::Self && (uint8)Neighbor < UE_ARRAY_COUNT(NeighborLinks));
-	FSvoNodeLinkBase NeighborLinkBase = NeighborLinks[(uint8)Neighbor];
+	ensure(Neighbor != ESvoNeighbor::Self && static_cast<uint8>(Neighbor) < UE_ARRAY_COUNT(NeighborLinks));
+	FSvoNodeLinkBase NeighborLinkBase = NeighborLinks[static_cast<uint8>(Neighbor)];
 
 	///> Resolve the Tile ID
 
@@ -19,7 +19,7 @@ FSvoNodeLink FSvoNode::GetNeighborLink(const FSvoTile& ParentTile, ESvoNeighbor 
 		// When the neighbor link was set, its user data was filled in with
 		// ESvoNeighbor::Self if it was a part of the same tile. Otherwise, the direction
 		// of the neighbor was stored.
-		if (NeighborLinkBase.UserData == (uint8)ESvoNeighbor::Self)
+		if (NeighborLinkBase.UserData == static_cast<uint8>(ESvoNeighbor::Self))
 		{
 			// The neighbor is a part of the same tile
 			TileID = ParentTile.GetID();
@@ -28,10 +28,10 @@ FSvoNodeLink FSvoNode::GetNeighborLink(const FSvoTile& ParentTile, ESvoNeighbor 
 		{
 			// The neighbor id is stored on the link and should always match the requested
 			// neighbor direction.
-			ensureAlways((uint8)Neighbor == NeighborLinkBase.UserData);
+			ensureAlways(static_cast<uint8>(Neighbor) == NeighborLinkBase.UserData);
 
 			// In this case, the neighbor is on an adjacent tile
-			FIntVector NeighborTileCoord = ParentTile.GetCoord() + FSvoUtils::GetNeighborDirection(Neighbor);
+			const FIntVector NeighborTileCoord = ParentTile.GetCoord() + FSvoUtils::GetNeighborDirection(Neighbor);
 			TileID = FSvoTile::CalcTileID(NeighborTileCoord);
 		}
 

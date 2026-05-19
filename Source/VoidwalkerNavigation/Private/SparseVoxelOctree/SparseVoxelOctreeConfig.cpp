@@ -5,7 +5,6 @@
 
 #include "VoidwalkerNavigationCustomVersion.h"
 #include "SparseVoxelOctreeNode.h"
-#include "SparseVoxelOctreeTile.h"
 #include "SparseVoxelOctreeUtils.h"
 
 FSvoConfig::FSvoConfig(const FVector& InSeedLocation, float InVoxelSize, uint32 InTilePoolSize, uint8 InTileLayerIdx)

@@ -339,7 +339,7 @@ void FSvoTile::Verify(const FSparseVoxelOctree* Octree /* = nullptr */) const
 		const FSvoLayer& CurLayer = Layers[i];
 
 		// Make sure that our range of nodes is in the pool
-		ensure(CurLayer.StartNode + CurLayer.MaxNodes <= (uint32)NodePool.Num());
+		ensure(CurLayer.StartNode + CurLayer.MaxNodes <= static_cast<uint32>(NodePool.Num()));
 
 		int32 NumActive = 0;
 
@@ -364,8 +364,6 @@ void FSvoTile::Verify(const FSparseVoxelOctree* Octree /* = nullptr */) const
 
 void FSvoTile::VerifyChildren(const FSvoNode& CurNodeInfo, const FSparseVoxelOctree* Octree) const
 {
-	FSvoNodeLink SelfLink = CurNodeInfo.GetSelfLink();
-
 	for (int32 i = 0; i < 8; ++i)
 	{
 		FSvoNodeLink ChildLink = CurNodeInfo.GetChildLink(i);

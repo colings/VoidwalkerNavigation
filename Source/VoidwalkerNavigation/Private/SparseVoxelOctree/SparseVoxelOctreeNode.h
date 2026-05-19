@@ -15,14 +15,14 @@ struct FSvoNodeLinkBase
 	// it's a voxel and index differently. -JMM
 
 	// 3 bits for the layer index to support 6 layers per tile [0, 5]
-	static const uint32 LAYERIDX_SIZE = 3;
+	static constexpr uint32 LAYERIDX_SIZE = 3;
 	// 18 bits to support 6 layers of nodes with 8^6 (262,142 or max coord component value
 	// of 63) Morton Codes at the leaf layer
-	static const uint32 NODEIDX_SIZE = 18;
+	static constexpr uint32 NODEIDX_SIZE = 18;
 	// 6 bits for 64 voxels plus 1 significant bit to signify an unset state
-	static const uint32 VOXELIDX_SIZE = 7;
+	static constexpr uint32 VOXELIDX_SIZE = 7;
 	// 4 spare bits for user data
-	static const uint32 USERDATA_SIZE = 4;
+	static constexpr uint32 USERDATA_SIZE = 4;
 
 	union
 	{
@@ -41,10 +41,10 @@ struct FSvoNodeLinkBase
 		: NodeID(SVO_INVALID_ID)
 	{}
 
-	FSvoNodeLinkBase(uint32 _LayerIdx, uint32 _NodeIdx, uint8 _VoxelIdx = SVO_NO_VOXEL)
-		: LayerIdx(_LayerIdx)
-		, NodeIdx(_NodeIdx)
-		, VoxelIdx(_VoxelIdx)
+	FSvoNodeLinkBase(uint32 LayerIdxIn, uint32 NodeIdxIn, uint8 VoxelIdxIn = SVO_NO_VOXEL)
+		: LayerIdx(LayerIdxIn)
+		, NodeIdx(NodeIdxIn)
+		, VoxelIdx(VoxelIdxIn)
 		, UserData(0)
 	{}
 
@@ -75,14 +75,14 @@ struct FSvoNodeLink : FSvoNodeLinkBase
 		SetID(ID);
 	}
 
-	FSvoNodeLink(uint32 _TileID, FSvoNodeLinkBase _Base)
-		: FSvoNodeLinkBase(_Base)
-		, TileID(_TileID)
+	FSvoNodeLink(uint32 TileIDIn, FSvoNodeLinkBase BaseIn)
+		: FSvoNodeLinkBase(BaseIn)
+		, TileID(TileIDIn)
 	{}
 
-	FSvoNodeLink(uint32 _TileID, uint32 _LayerIdx, uint32 _NodeIdx, uint8 _VoxelIdx = SVO_NO_VOXEL)
-		: FSvoNodeLinkBase(_LayerIdx, _NodeIdx, _VoxelIdx)
-		, TileID(_TileID)
+	FSvoNodeLink(uint32 TileIDIn, uint32 LayerIdxIn, uint32 NodeIdxIn, uint8 VoxelIdxIn = SVO_NO_VOXEL)
+		: FSvoNodeLinkBase(LayerIdxIn, NodeIdxIn, VoxelIdxIn)
+		, TileID(TileIDIn)
 	{}
 
 	bool operator==(const FSvoNodeLink& Other) const
@@ -100,12 +100,12 @@ struct FSvoNodeLink : FSvoNodeLinkBase
 	friend uint32 GetTypeHash(const FSvoNodeLink& Link) { return GetTypeHash(Link.GetID()); }
 
 	// Returns the unique 64-bit ID for this node link, ignoring any user data
-	uint64 GetID() const { return ((uint64)TileID << 32) | (NodeID | SVO_NODE_USERDATA_MASK); }
+	uint64 GetID() const { return (static_cast<uint64>(TileID) << 32) | (NodeID | SVO_NODE_USERDATA_MASK); }
 
 	// Sets the 64-bit ID for this node link. This is the composition of the TileID and
 	// NodeID. While user data is applied, it is not considered during comparisons and is
 	// only for external use.
-	void SetID(uint64 ID) { TileID = (ID >> 32); NodeID = (uint32)ID; }
+	void SetID(uint64 ID) { TileID = (ID >> 32); NodeID = static_cast<uint32>(ID); }
 
 	// Calculates the parent link based on the current link. Note that this does not know
 	// what the tile layer is, so if you call it with a tile link you will generate an
@@ -222,9 +222,6 @@ private:
 	// All neighbors to this node.
 	FSvoNodeLinkBase NeighborLinks[6];
 
-	// Retain padding to store additional data in the future
-	uint8 Padding[24];
-
 	// This is data that is relevant to the specific node.  Basically if it is a leaf node
 	// then this will be the voxel data otherwise it will be extra info about the node.
 	union
@@ -244,15 +241,16 @@ private:
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-static_assert(sizeof(FSvoNodeLink) == 8, "Expected node link to be 64 bits");
+// The node links use bitmasked data to fit the exact data we need to refer to a node, based on tile and node limits.
+// We don't expect the size to exceed 8 bytes.
+static_assert(sizeof(FSvoNodeLink) == 8, "Node link size changed");
 
-// This structure is optimized to fit in a cache line, so we should avoid bloating up the
-// size with extra data or a virtual function table. There should be plenty of space for
-// anything we need to add to non-leaf nodes in the voxel space, and there's extra space
-// in the neighbors user data if we needed it for leaf nodes (although would be a hassle
-// to use since we currently look for invalid nodes by checking for all the link data bits
+// This structure is the bulk of our memory usage, so we should avoid bloating up the size with extra data or a virtual
+// function table. There should be plenty of space for anything we need to add to non-leaf nodes in the voxel space,
+// since it's unused in that case. For leaf nodes there's extra space in the neighbors user data if we needed it,
+// although it would be a hassle to use since we currently look for invalid nodes by checking for all the link data bits
 // being set (SVO_INVALID_NODELINK).
-static_assert(sizeof(FSvoNode) == 64, "Expected node to be 64 bytes");
+static_assert(sizeof(FSvoNode) == 40, "Node size changed");
 
 FArchive& operator<<(FArchive& Ar, FSvoNodeLinkBase& NodeLinkBase)
 {
@@ -332,11 +330,11 @@ void FSvoNode::SetNeighborLink(ESvoNeighbor Neighbor, FSvoNodeLink NeighborLink)
 {
 	ensure(Neighbor < ESvoNeighbor::Self);
 
-	NeighborLinks[(uint8)Neighbor].NodeID = NeighborLink.NodeID;
+	NeighborLinks[static_cast<uint8>(Neighbor)].NodeID = NeighborLink.NodeID;
 
 	// Utilize the user data to identify whether this neighboring link is a part of the
 	// same tile or not.
-	NeighborLinks[(uint8)Neighbor].UserData = (NeighborLink.TileID == GetSelfLink().TileID) ? (uint8)ESvoNeighbor::Self : (uint8)Neighbor;
+	NeighborLinks[static_cast<uint8>(Neighbor)].UserData = (NeighborLink.TileID == GetSelfLink().TileID) ? static_cast<uint8>(ESvoNeighbor::Self) : static_cast<uint8>(Neighbor);
 }
 
 FSvoNode& FSvoNode::operator=(const FSvoNode& Other)

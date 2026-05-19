@@ -17,7 +17,7 @@ class FSvoTile
 	friend class FNavSvoTileGenerator;
 
 public:
-	FSvoTile() {}
+	FSvoTile() = default;
 	FSvoTile(uint32 TileID, uint8 TileLayerIdx, const FIntVector& TileCoord);
 
 	// Creates all nodes needed for this tile

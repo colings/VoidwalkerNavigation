@@ -56,11 +56,11 @@ struct FSvoUtils
 	static uint32 MortonNeighbor(uint32 Code, ESvoNeighbor Neighbor)
 	{
 		// The mask for the axis this neighbor is in
-		const uint32 AxisMask = MortonNeighborLUT[(uint8)Neighbor][0];
+		const uint32 AxisMask = MortonNeighborLUT[static_cast<uint8>(Neighbor)][0];
 		// The Morton code for the offset in this axis (+1 or -1)
-		const uint32 Offset = MortonNeighborLUT[(uint8)Neighbor][1];
+		const uint32 Offset = MortonNeighborLUT[static_cast<uint8>(Neighbor)][1];
 		// The Morton code where there is no neighbor in this direction
-		const uint32 AxisEdge = MortonNeighborLUT[(uint8)Neighbor][2];
+		const uint32 AxisEdge = MortonNeighborLUT[static_cast<uint8>(Neighbor)][2];
 
 		const uint32 AxisValue = (Code & AxisMask);
 
@@ -178,12 +178,12 @@ struct FSvoUtils
 
 	static uint8 GetVoxelIndexForCoord(const FIntVector& VoxelCoord)
 	{
-		return (uint8)GetIndexForCoord(VoxelCoord, VoxelGridExtents);
+		return static_cast<uint8>(GetIndexForCoord(VoxelCoord, VoxelGridExtents));
 	}
 
 	static void GetVoxelCoordFromIndex(uint8 Index, FIntVector& OutVoxelCoord)
 	{
-		return GetCoordFromIndex((uint32)Index, OutVoxelCoord, VoxelGridExtents);
+		return GetCoordFromIndex(Index, OutVoxelCoord, VoxelGridExtents);
 	}
 
 	static bool IsVoxelCoordValid(const FIntVector& VoxelCoord)
@@ -248,7 +248,7 @@ struct FSvoUtils
 		// nodes (layer 0). From there, multiplying by a power of 2 puts us at the desired
 		// level in the octree.
 		float Layer0Resolution = (VoxelSize * SVO_VOXEL_GRID_EXTENT);
-		return (LayerIdx == SVO_LEAF_LAYER) ? Layer0Resolution : Layer0Resolution * FMath::Pow(2.0f, float(LayerIdx));
+		return (LayerIdx == SVO_LEAF_LAYER) ? Layer0Resolution : Layer0Resolution * FMath::Pow(2.0f, static_cast<float>(LayerIdx));
 	}
 
 	static TArrayView<const ESvoNeighbor> GetAllNeighbors()
@@ -258,32 +258,32 @@ struct FSvoUtils
 
 	static uint8 GetChildIndex(TMortonCode NodeMortonCode)
 	{
-		static const uint32 SiblingMask = 0x7;
+		constexpr uint32 SiblingMask = 0x7;
 		return (NodeMortonCode & SiblingMask);
 	}
 
 	// Returns true if both Morton codes are siblings, ie, have the same direct parent.
 	static bool AreSiblings(TMortonCode NodeMortonCodeA, TMortonCode NodeMortonCodeB)
 	{
-		static const uint32 ParentMask = 0xFFFFFFF8;
+		constexpr uint32 ParentMask = 0xFFFFFFF8;
 		return (NodeMortonCodeA & ParentMask) == (NodeMortonCodeB & ParentMask);
 	}
 
 	static ESvoNeighbor GetOppositeNeighbor(ESvoNeighbor Neighbor)
 	{
-		return (ESvoNeighbor)(((uint8)Neighbor + 3) % 6);
+		return (ESvoNeighbor)((static_cast<uint8>(Neighbor) + 3) % 6);
 	}
 
 	static const FIntVector& GetNeighborDirection(ESvoNeighbor Neighbor)
 	{
-		return DirectionLUT[(uint8)Neighbor];
+		return DirectionLUT[static_cast<uint8>(Neighbor)];
 	}
 
 	// Returns the indices (0-7) for the 4 child nodes that touch the given neighbor
 	// (also, this is the worst name ever)
 	static TArrayView<const uint8> GetChildrenTouchingNeighbor(ESvoNeighbor Neighbor)
 	{
-		return ChildTouchingNeighborLUT[(uint8)Neighbor];
+		return ChildTouchingNeighborLUT[static_cast<uint8>(Neighbor)];
 	}
 
 	// Given the index for a node and one of its siblings, returns the neighbor
@@ -299,12 +299,12 @@ struct FSvoUtils
 	// (See ESvoNeighbor enum for index order)
 	static uint8 GetNeighborVoxel(uint8 VoxelIndex, ESvoNeighbor Neighbor)
 	{
-		return VoxelIndex + OppositeLeafFaceVoxelOffsetLUT[(uint8)Neighbor];
+		return VoxelIndex + OppositeLeafFaceVoxelOffsetLUT[static_cast<uint8>(Neighbor)];
 	}
 
 	static TArrayView<const uint8> GetTouchingNeighborVoxels(ESvoNeighbor Neighbor)
 	{
-		return LeafFaceVoxelsLUT[(uint8)GetOppositeNeighbor(Neighbor)];
+		return LeafFaceVoxelsLUT[static_cast<uint8>(GetOppositeNeighbor(Neighbor))];
 	}
 
 private:

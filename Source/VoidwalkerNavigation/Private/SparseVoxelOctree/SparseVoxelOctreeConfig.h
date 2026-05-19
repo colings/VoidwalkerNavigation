@@ -53,7 +53,7 @@ public:
 	// layer resolution.
 	void GetFirstChildLocation(const FVector& NodeLocation, uint8 NodeLayerIdx, ECellOffset Offset, FVector& OutLocation) const;
 
-	// Given a leaf node's location, returns the the location of a specified voxel
+	// Given a leaf node's location, returns the location of a specified voxel
 	FVector GetVoxelLocation(const FIntVector& VoxelCoord, const FVector& NodeLocation) const;
 	FVector GetVoxelLocation(uint8 VoxelIdx, const FVector& NodeLocation) const;
 
