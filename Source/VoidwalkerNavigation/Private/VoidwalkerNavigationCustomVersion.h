@@ -8,14 +8,8 @@ struct FVoidwalkerNavigationCustomVersion
 {
 	enum Type
 	{
-		// Rebooted the file format
-		InitialVersion = 9,
-
-		// Changed how the non-leaf node properties are stored
-		NodePropsChanged,
-
-		// Added 32-bit neighbor node links to free up some memory for other data
-		NodeLinkBaseAdded,
+		// Forked project from Gunfire 3D Navigation
+		InitialVersion = 1,
 
 		// -----<new versions can be added above this line>-----
 		VersionPlusOne,

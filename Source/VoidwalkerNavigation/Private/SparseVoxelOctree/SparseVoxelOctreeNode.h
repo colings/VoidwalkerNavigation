@@ -53,9 +53,9 @@ struct FSvoNodeLinkBase
 	// Determines if the link contains valid data, ignoring any user data.
 	bool IsValid() const
 	{
-		return (LayerIdx >= 0 && LayerIdx < SVO_MAX_LAYERS) &&
-			   (NodeIdx >= 0 && NodeIdx < SVO_MAX_NODES) &&
-			   ((VoxelIdx >= 0 && VoxelIdx < SVO_VOXELS_PER_LEAF) || (VoxelIdx == SVO_NO_VOXEL));
+		return (LayerIdx < SVO_MAX_LAYERS) &&
+			   (NodeIdx < SVO_MAX_NODES) &&
+			   ((VoxelIdx < SVO_VOXELS_PER_LEAF) || (VoxelIdx == SVO_NO_VOXEL));
 	}
 	bool IsLeafNode() const { return (LayerIdx == SVO_LEAF_LAYER); }
 	bool IsVoxelNode() const { return IsLeafNode() && VoxelIdx != SVO_NO_VOXEL; }
@@ -181,9 +181,9 @@ public:
 
 	// Leaf node utility
 	bool IsLeafNode() const { return (SelfLink.LayerIdx == SVO_LEAF_LAYER); }
-	bool IsVoxelBlocked(uint8 VoxelIdx) const { ensure(IsLeafNode()); ensure(VoxelIdx < 64); return ((Voxels & (uint64(1) << VoxelIdx)) != 0); }
-	void SetVoxelBlocked(uint8 VoxelIdx) { ensure(IsLeafNode()); ensure(VoxelIdx < 64); Voxels |= (uint64(1) << VoxelIdx); }
-	void SetVoxelEmpty(uint8 VoxelIdx) { ensure(IsLeafNode()); ensure(VoxelIdx < 64); Voxels &= ~(uint64(1) << VoxelIdx); }
+	bool IsVoxelBlocked(uint8 VoxelIdx) const { ensure(IsLeafNode()); ensure(VoxelIdx < 64); return ((Voxels & (1ull << VoxelIdx)) != 0); }
+	void SetVoxelBlocked(uint8 VoxelIdx) { ensure(IsLeafNode()); ensure(VoxelIdx < 64); Voxels |= (1ull << VoxelIdx); }
+	void SetVoxelEmpty(uint8 VoxelIdx) { ensure(IsLeafNode()); ensure(VoxelIdx < 64); Voxels &= ~(1ull << VoxelIdx); }
 	void ClearVoxels() { ensure(IsLeafNode()); Voxels = 0; }
 
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -214,8 +214,6 @@ public:
 
 	inline void Serialize(FArchive& Ar);
 	inline friend FArchive& operator<<(FArchive& Ar, FSvoNode& Node);
-
-	inline void UpdateOldNode();
 
 private:
 	// Our node info
@@ -355,31 +353,7 @@ void FSvoNode::Serialize(FArchive& Ar)
 	Ar << SelfLink;
 	ensureAlways(SelfLink.IsValid() || SelfLink == SVO_INVALID_NODELINK);
 
-	if (Version < FVoidwalkerNavigationCustomVersion::NodeLinkBaseAdded)
-	{
-		for (uint8 NeighborIdx = 0; NeighborIdx < 6; ++NeighborIdx)
-		{
-			// The order of the IDs has been flipped with this update so we need to
-			// manually load and re-apply the values.
-			uint32 NeighborTileID, NeighborNodeID;
-			Ar << NeighborTileID;
-			Ar << NeighborNodeID;
-
-			NeighborLinks[NeighborIdx].NodeID = NeighborNodeID;
-			if (NeighborTileID == SelfLink.TileID)
-			{
-				NeighborLinks[NeighborIdx].UserData = (uint8)ESvoNeighbor::Self;
-			}
-			else
-			{
-				NeighborLinks[NeighborIdx].UserData = NeighborIdx;
-			}
-		}
-	}
-	else
-	{
-		Ar.Serialize(&NeighborLinks, sizeof(NeighborLinks));
-	}
+	Ar.Serialize(&NeighborLinks, sizeof(NeighborLinks));
 
 	Ar << Voxels;
 }
@@ -388,16 +362,4 @@ FArchive& operator<<(FArchive& Ar, FSvoNode& Node)
 {
 	Node.Serialize(Ar);
 	return Ar;
-}
-
-void FSvoNode::UpdateOldNode()
-{
-	if (!IsLeafNode())
-	{
-		const bool bIsTile = (Voxels & (1ull << 0)) != 0;
-		const bool bHasChildren = (Voxels & (1ull << 1)) != 0;
-
-		NodeIsTile = bIsTile;
-		NodeState = bHasChildren ? ENodeState::PartiallyBlocked : ENodeState::Open;
-	}
 }

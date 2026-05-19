@@ -6,7 +6,7 @@
 #include "SparseVoxelOctree/SparseVoxelOctreeConfig.h"
 
 // Initialize Statics
-const FGuid FVoidwalkerNavigationCustomVersion::GUID(0x8EE8740C, 0xE2E4451C, 0x9881C96F, 0xB03956CA);
+const FGuid FVoidwalkerNavigationCustomVersion::GUID(0xf12bd3fd, 0xf63c4121, 0x916cf40c, 0xc349229a);
 FSvoConfig* FVoidwalkerNavigationCustomVersion::SvoConfig = nullptr;
 
 // Register the custom version with core

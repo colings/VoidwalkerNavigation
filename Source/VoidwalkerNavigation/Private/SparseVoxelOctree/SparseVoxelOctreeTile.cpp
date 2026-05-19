@@ -127,20 +127,7 @@ void FSvoTile::Serialize(FArchive& Ar)
 		ReleaseMemory();
 	}
 
-	if (Version < FVoidwalkerNavigationCustomVersion::NodeLinkBaseAdded)
-	{
-		FVector Location;
-		Ar << Location;
-
-		if (FSvoConfig* Config = FVoidwalkerNavigationCustomVersion::SvoConfig)
-		{
-			Coord = Config->LocationToCoord(Location, Config->GetTileResolution());
-		}
-	}
-	else
-	{
-		Ar << Coord;
-	}
+	Ar << Coord;
 
 	Ar << NodePool;
 
@@ -157,21 +144,6 @@ void FSvoTile::Serialize(FArchive& Ar)
 		Ar << Layer.StartNode;
 		Ar << Layer.NumNodes;
 		Ar << Layer.MaxNodes;
-	}
-
-	if (Version < FVoidwalkerNavigationCustomVersion::NodePropsChanged)
-	{
-		NodeInfo.UpdateOldNode();
-
-		for (FSvoNode& Node : NodePool)
-		{
-			if (Node.IsLeafNode())
-			{
-				break;
-			}
-
-			Node.UpdateOldNode();
-		}
 	}
 
 #if !UE_BUILD_SHIPPING && SVO_VERIFY_NODES
