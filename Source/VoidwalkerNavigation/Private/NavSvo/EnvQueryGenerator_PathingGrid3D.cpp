@@ -1,4 +1,5 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
+// Copyright Colin Bonstead. All Rights Reserved.
 
 #include "EnvQueryGenerator_PathingGrid3D.h"
 #include "VoidwalkerNavData.h"

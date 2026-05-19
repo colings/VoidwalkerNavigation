@@ -1,4 +1,5 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
+// Copyright Colin Bonstead. All Rights Reserved.
 // Modified version of Recast/Detour's source file
 
 //

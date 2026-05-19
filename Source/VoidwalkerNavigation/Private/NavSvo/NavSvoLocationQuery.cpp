@@ -1,8 +1,9 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
+// Copyright Colin Bonstead. All Rights Reserved.
 
 #include "NavSvoLocationQuery.h"
 
-// Gunfire
+// Voidwalker
 #include "VoidwalkerNavigationUtils.h"
 #include "SparseVoxelOctree/SparseVoxelOctree.h"
 

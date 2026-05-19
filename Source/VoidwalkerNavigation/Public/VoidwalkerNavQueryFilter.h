@@ -1,4 +1,5 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
+// Copyright Colin Bonstead. All Rights Reserved.
 
 #pragma once
 
@@ -141,7 +142,7 @@ private:
 };
 
 //
-// Custom navigation filter for Gunfire 3D Navigation queries.
+// Custom navigation filter for Voidwalker Navigation queries.
 //
 UCLASS(Abstract)
 class VOIDWALKERNAVIGATION_API UVoidwalkerNavigationQueryFilter : public UNavigationQueryFilter

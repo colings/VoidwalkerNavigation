@@ -1,4 +1,5 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
+// Copyright Colin Bonstead. All Rights Reserved.
 
 #include "VoidwalkerNavData.h"
 
@@ -44,9 +45,9 @@ void FVoidwalkerNavigation::StartupModule()
 #if WITH_EDITOR
 	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings"))
 	{
-		SettingsModule->RegisterSettings("Project", "Plugins", "Gunfire 3D Navigation",
-			LOCTEXT("VoidwalkerNavigationHeading", "Gunfire 3D Navigation"),
-			LOCTEXT("DescriptionDescription", "Settings for Gunfire 3D Navigation Plugin"),
+		SettingsModule->RegisterSettings("Project", "Plugins", "Voidwalker Navigation",
+			LOCTEXT("VoidwalkerNavigationHeading", "Voidwalker Navigation"),
+			LOCTEXT("DescriptionDescription", "Settings for Voidwalker Navigation Plugin"),
 			GetMutableDefault<AVoidwalkerNavData>()
 		);
 	}

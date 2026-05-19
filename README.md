@@ -1,6 +1,6 @@
-# Gunfire 3D Navigation
+# Voidwalker Navigation
 
-Gunfire3DNavigation is a plugin for generating voxelized navigation data for pathfinding in Unreal Engine 5. This is different from the stock Recast navigation mesh in that it can be used for 3D navigation, for flying or swimming creatures.
+VoidwalkerNavigation is a plugin for generating voxelized navigation data for pathfinding in Unreal Engine 5. This is different from the stock Recast navigation mesh in that it can be used for 3D navigation, for flying or swimming creatures.
 
 **This documentation is very basic and preliminary...**
 

@@ -1,4 +1,5 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
+// Copyright Colin Bonstead. All Rights Reserved.
 
 #include "NavSvoSceneProxy.h"
 #include "VoidwalkerNavData.h"

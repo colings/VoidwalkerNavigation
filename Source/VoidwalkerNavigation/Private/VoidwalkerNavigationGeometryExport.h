@@ -1,4 +1,5 @@
 // Copyright Gunfire Games, LLC. All Rights Reserved.
+// Copyright Colin Bonstead. All Rights Reserved.
 
 // Most of this is taken directly from RecastNavMeshGenerator.cpp, with slight modifications
 
