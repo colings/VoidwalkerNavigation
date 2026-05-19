@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1",
+	"FriendlyName": "Voidwalker Navigation Plugin",
+	"Description": "",
+	"Category": "Gunfire",
+	"CreatedBy": "Gunfire Games, LLC",
+	"CreatedByURL": "http://www.gunfiregames.com/",
+	"DocsURL": "http://www.gunfiregames.com/",
+	"MarketplaceURL": "",
+	"SupportURL": "http://www.gunfiregames.com/",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "VoidwalkerNavigation",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault"
+		}
+	]
+}
