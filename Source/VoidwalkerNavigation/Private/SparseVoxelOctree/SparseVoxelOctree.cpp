@@ -36,12 +36,6 @@ FSparseVoxelOctree::FSparseVoxelOctree(const FSvoConfig& InConfig)
 	}
 }
 
-FSparseVoxelOctree::~FSparseVoxelOctree()
-{
-	// Clean up
-	Reset();
-}
-
 void FSparseVoxelOctree::Reset()
 {
 	// Reset active tiles and look up tables

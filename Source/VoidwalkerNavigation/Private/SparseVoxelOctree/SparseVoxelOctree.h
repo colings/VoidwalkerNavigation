@@ -7,7 +7,6 @@
 #include "SparseVoxelOctreeTile.h"
 #include "SparseVoxelOctreeConfig.h"
 #include "StatArray.h"
-#include "IteratorHelpers.h"
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -66,7 +65,7 @@ class VOIDWALKERNAVIGATION_API FSparseVoxelOctree
 
 public:
 	FSparseVoxelOctree(const FSvoConfig& InConfig);
-	virtual ~FSparseVoxelOctree();
+	virtual ~FSparseVoxelOctree() = default;
 
 	// Destroys all data within the octree
 	virtual void Reset();
