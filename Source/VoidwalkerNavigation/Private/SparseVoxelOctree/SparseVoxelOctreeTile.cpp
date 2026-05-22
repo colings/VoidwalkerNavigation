@@ -189,7 +189,7 @@ int32 FSvoTile::GetNodeIndex(const FSvoNode& Node) const
 	return INDEX_NONE;
 }
 
-FConditionalRangeIterator<const FSvoNode> FSvoTile::GetNodesForLayer(uint8 LayerIdx) const
+FSvoNodeConstIterator FSvoTile::GetNodesForLayer(uint8 LayerIdx) const
 {
 	if (Layers.IsValidIndex(LayerIdx))
 	{
@@ -198,14 +198,14 @@ FConditionalRangeIterator<const FSvoNode> FSvoTile::GetNodesForLayer(uint8 Layer
 		if (Layer.NumNodes > 0)
 		{
 			const FSvoNode* StartNode = &NodePool[Layer.StartNode];
-			return FConditionalRangeIterator<const FSvoNode>(StartNode, StartNode + Layer.MaxNodes);
+			return FSvoNodeConstIterator(StartNode, StartNode + Layer.MaxNodes);
 		}
 	}
 
-	return FConditionalRangeIterator<const FSvoNode>(nullptr, nullptr);
+	return FSvoNodeConstIterator(nullptr, nullptr);
 }
 
-FConditionalRangeIterator<FSvoNode> FSvoTile::GetNodesForLayer(uint8 LayerIdx)
+FSvoNodeIterator FSvoTile::GetNodesForLayer(uint8 LayerIdx)
 {
 	if (Layers.IsValidIndex(LayerIdx))
 	{
@@ -214,11 +214,11 @@ FConditionalRangeIterator<FSvoNode> FSvoTile::GetNodesForLayer(uint8 LayerIdx)
 		if (Layer.NumNodes > 0)
 		{
 			FSvoNode* StartNode = &NodePool[Layer.StartNode];
-			return FConditionalRangeIterator<FSvoNode>(StartNode, StartNode + Layer.MaxNodes);
+			return FSvoNodeIterator(StartNode, StartNode + Layer.MaxNodes);
 		}
 	}
 
-	return FConditionalRangeIterator<FSvoNode>(nullptr, nullptr);
+	return FSvoNodeIterator(nullptr, nullptr);
 }
 
 FSvoNodeLink FSvoTile::GetNeighborLink(ESvoNeighbor Neighbor) const

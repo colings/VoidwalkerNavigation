@@ -6,6 +6,17 @@
 #include "SparseVoxelOctreeNode.h"
 #include "IteratorHelpers.h"
 
+struct FSvoActivePredicate
+{
+	FORCEINLINE bool operator()(const FSvoNode& Item) const
+	{
+		return Item.IsActive();
+	}
+};
+
+typedef FConditionalRangeIterator<FSvoNode, FSvoActivePredicate> FSvoNodeIterator;
+typedef FConditionalRangeIterator<const FSvoNode, FSvoActivePredicate> FSvoNodeConstIterator;
+
 //
 // A tile is our top level node. The navigable space is partitioned into a 3D grid of
 // tiles.
@@ -76,8 +87,8 @@ public:
 
 	// Returns all the active nodes in an iterator you can use with a ranged for
 	//  Ex: for (FSvoNode& CurNode : GetNodesForLayer(SVO_LEAF_LAYER))
-	FConditionalRangeIterator<const FSvoNode> GetNodesForLayer(uint8 LayerIdx) const;
-	FConditionalRangeIterator<FSvoNode> GetNodesForLayer(uint8 LayerIdx);
+	FSvoNodeConstIterator GetNodesForLayer(uint8 LayerIdx) const;
+	FSvoNodeIterator GetNodesForLayer(uint8 LayerIdx);
 
 	// Returns the link of the specified neighbor for this tile.
 	FSvoNodeLink GetNeighborLink(ESvoNeighbor Neighbor) const;
