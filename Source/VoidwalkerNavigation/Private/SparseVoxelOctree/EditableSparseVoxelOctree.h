@@ -5,8 +5,6 @@
 
 #include "SparseVoxelOctree.h"
 
-#include "Containers/StaticBitArray.h"
-
 class FSvoTile;
 
 class VOIDWALKERNAVIGATION_API FEditableSvo : public FSparseVoxelOctree, public TSharedFromThis<FEditableSvo, ESPMode::ThreadSafe>
@@ -24,7 +22,7 @@ public:
 	virtual void Serialize(FArchive& Ar) override;
 
 	// Returns the amount of memory used by the octree
-	uint32 GetMemUsed() const override;
+	virtual uint32 GetMemUsed() const override;
 	//~ End FSparseVoxelOctree Interface
 
 	// Adds a tile to this octree from another octree

@@ -161,7 +161,7 @@ public:
 	bool GatherReachableNodes(const FVector& Origin, float MaxDistance, TArray<NavNodeRef>& OutResult, FSharedConstNavQueryFilter QueryFilter = nullptr) const;
 
 	// Iterates over all reachable nodes from the supplied origin, calling the lambda
-	// function for each one visisted.
+	// function for each one visited.
 	//
 	// NOTE: If the lambda returns false, the search will be stopped.
 	bool ForEachReachableNode(const FVector& Origin, float MaxDistance, TFunction<bool(NavNodeRef)> Lambda, FSharedConstNavQueryFilter QueryFilter = nullptr) const;

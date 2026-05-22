@@ -33,7 +33,7 @@ const FSvoNode* FSparseVoxelOctree::GetNodeFromLink(const FSvoNodeLink& Link) co
 	// node lookup.
 	if (FoundNode != nullptr)
 	{
-		FSvoNodeLink SelfLink = FoundNode->GetSelfLink();
+		const FSvoNodeLink SelfLink = FoundNode->GetSelfLink();
 		ensureAlways((SelfLink.GetID() | SVO_NODE_VOXEL_MASK) == (Link.GetID() | SVO_NODE_VOXEL_MASK));
 	}
 

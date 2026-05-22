@@ -17,6 +17,7 @@ class VOIDWALKERNAVIGATION_API UEnvQueryGenerator_PathingGrid3D : public UEnvQue
 {
 	GENERATED_BODY()
 
+public:
 	// Half of square's extent, like a radius
 	UPROPERTY(EditDefaultsOnly, Category = Generator)
 	FAIDataProviderFloatValue GridHalfSize;
@@ -26,12 +27,12 @@ class VOIDWALKERNAVIGATION_API UEnvQueryGenerator_PathingGrid3D : public UEnvQue
 	FAIDataProviderFloatValue SpaceBetween;
 
 	// The minimum height of the grid relative to the context (a negative value here is
-	// below the context that many units). Will be clamped to a multiple of SpaceBetween.
+	// below the context that many units). Will be clamped to a multiple of Space Between.
 	UPROPERTY(EditDefaultsOnly, Category = Generator)
 	FAIDataProviderFloatValue MinHeight;
 
 	// The maximum height of the grid relative to the context. Will be clamped to a
-	// multiple of SpaceBetween.
+	// multiple of Space Between.
 	UPROPERTY(EditDefaultsOnly, Category = Generator)
 	FAIDataProviderFloatValue MaxHeight;
 

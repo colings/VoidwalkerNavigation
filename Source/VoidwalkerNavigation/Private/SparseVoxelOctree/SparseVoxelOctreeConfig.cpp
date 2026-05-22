@@ -31,7 +31,7 @@ void FSvoConfig::Init()
 {
 	// Clamp the layer index to the max supported number of layers.
 	check(SVO_MAX_LAYERS > 0);
-	TileLayerIdx = FMath::Min(TileLayerIdx, (uint8)(SVO_MAX_LAYERS - 1));
+	TileLayerIdx = FMath::Min(TileLayerIdx, static_cast<uint8>(SVO_MAX_LAYERS - 1));
 
 	VoxelExtent = FVector(VoxelSize * 0.5f);
 

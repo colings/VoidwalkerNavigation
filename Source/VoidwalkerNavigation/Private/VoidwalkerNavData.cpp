@@ -28,7 +28,7 @@ DECLARE_CYCLE_STAT(TEXT("ProjectPoint"), STAT_ProjectPoint, STATGROUP_Voidwalker
 DECLARE_CYCLE_STAT(TEXT("BatchProjectPoints"), STAT_BatchProjectPoints, STATGROUP_VoidwalkerNavigation);
 DECLARE_CYCLE_STAT(TEXT("GetRandomReachablePointInRadius"), STAT_GetRandomReachablePointInRadius, STATGROUP_VoidwalkerNavigation);
 
-LLM_DEFINE_TAG(VoidwalkerNavData, NAME_None, NAME_None);
+LLM_DEFINE_TAG(VoidwalkerNavData);
 
 bool AVoidwalkerNavData::bGenerationBoostMode = false;
 
@@ -40,8 +40,7 @@ AVoidwalkerNavData::AVoidwalkerNavData()
 
 	if (HasAnyFlags(RF_ClassDefaultObject) == false)
 	{
-		// NAVTODO: Currently no distinct support for hierarchical path finding so just
-		// redirecting to standard path finding.
+		// TODO: Currently no distinct support for hierarchical path finding so just redirecting to standard path finding.
 
 		// Register path finding implementations
 		FindPathImplementation = FindPath;
@@ -157,7 +156,7 @@ void AVoidwalkerNavData::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
-	if (PropertyChangedEvent.Property != NULL)
+	if (PropertyChangedEvent.Property != nullptr)
 	{
 		FName CategoryName = FObjectEditorUtils::GetCategoryFName(PropertyChangedEvent.Property);
 		FName PropertyName = PropertyChangedEvent.Property->GetFName();
@@ -1105,10 +1104,9 @@ ENavigationQueryResult::Type AVoidwalkerNavData::CalcPathLengthAndCost(const FVe
 	// Resolve the query filter
 	const FNavigationQueryFilter& ResolvedQueryFilter = ResolveFilterRef(QueryFilter);
 	const FVoidwalkerNavQueryFilter* QueryFilterImpl = StaticCast<const FVoidwalkerNavQueryFilter*>(ResolvedQueryFilter.GetImplementation());
-	const FVector AdjustedEndLocation = ResolvedQueryFilter.GetAdjustedEndLocation(PathEnd);
 	const uint32 MaxSearchNodes = ResolvedQueryFilter.GetMaxSearchNodes();
 	const FVector NodeQueryExtent = GetDefaultQueryExtent();
-	const float CostLimit = MAX_flt;
+	constexpr float CostLimit = MAX_flt;
 
 	FVector StartLocation, EndLocation;
 

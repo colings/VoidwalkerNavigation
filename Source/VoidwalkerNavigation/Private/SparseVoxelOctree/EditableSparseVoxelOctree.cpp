@@ -7,8 +7,6 @@
 #include "VoidwalkerNavigationUtils.h"
 #include "SparseVoxelOctreeUtils.h"
 
-#include "AI/NavigationSystemBase.h"
-
 // Profiling stats
 DECLARE_CYCLE_STAT(TEXT("CopyTile (FEditableSvo)"), STAT_FEditableSvo_CopyTile, STATGROUP_VoidwalkerNavigation);
 DECLARE_CYCLE_STAT(TEXT("AssumeTile (FEditableSvo)"), STAT_FEditableSvo_AssumeTile, STATGROUP_VoidwalkerNavigation);
@@ -184,7 +182,6 @@ void FEditableSvo::MarkNeighborsDirty(const FSvoNodeLink& Link)
 	{
 		const ESvoNeighbor Neighbor = NeighborIter.GetNeighbor();
 		const FSvoNodeLink NeighborLink = NeighborIter.GetNeighborLink();
-		const FSvoNode& NeighborNode = NeighborIter.GetNeighborNodeChecked();
 
 		// All neighbors should be at this resolution or lower as we cannot link from a
 		// larger node to a smaller node.
@@ -198,8 +195,7 @@ void FEditableSvo::MarkNeighborsDirty(const FSvoNodeLink& Link)
 		// possibly any children within the neighbor).
 		if (NeighborLink.LayerIdx == Link.LayerIdx)
 		{
-			const ESvoNeighbor OppositeNeighbor = FSvoUtils::GetOppositeNeighbor(Neighbor);
-			const ESvoNeighborFlags OppositeNeighborFlag = (ESvoNeighborFlags)(1 << (uint8)OppositeNeighbor);
+			const ESvoNeighborFlags OppositeNeighborFlag = static_cast<ESvoNeighborFlags>(1 << static_cast<uint8>(Neighbor));
 
 			ESvoNeighborFlags& NeighborFlags = DirtyNodes.FindOrAdd(NeighborLink);
 			EnumAddFlags(NeighborFlags, OppositeNeighborFlag);
@@ -227,20 +223,16 @@ void FEditableSvo::FinalizeNodes()
 		// Iterate over each dirty node and update their neighbor links
 		for (TPair<FSvoNodeLink, ESvoNeighborFlags>& DirtyNode : DirtyNodes)
 		{
-			// When adding a new node, we need to first link the node to its neighbors and
-			// then take each neighbor and re-link any of their neighbors links that point
-			// back towards this node. We have to start at the first node that is at or
-			// below the layer level of this node's parent.  This is because a
-			// higher-resolution node can link to a lower-resolution node but not
-			// vice-versa so it's possible that the neighbor node should now link to this
-			// node instead of the lower-resolution node that used to be empty but now
-			// contains this new node.
-
+			// When adding a new node, we need to first link the node to its neighbors and then take each neighbor and
+			// re-link any of their neighbors links that point back towards this node. We have to start at the first
+			// node that is at or below the layer level of this node's parent. This is because a higher-resolution node
+			// can link to a lower-resolution node but not vice versa so it's possible that the neighbor node should now
+			// link to this node instead of the lower-resolution node that used to be empty but now contains this new node.
 			ensureAlways(DirtyNode.Value != ESvoNeighborFlags::None);
 
 			for (ESvoNeighbor Neighbor : FSvoUtils::GetAllNeighbors())
 			{
-				const ESvoNeighborFlags NeighborFlag = (ESvoNeighborFlags)(1 << (uint8)Neighbor);
+				const ESvoNeighborFlags NeighborFlag = static_cast<ESvoNeighborFlags>(1 << static_cast<uint8>(Neighbor));
 				if (EnumHasAnyFlags(DirtyNode.Value, NeighborFlag))
 				{
 					LinkNeighborForNodeHierarchically(DirtyNode.Key, Neighbor);

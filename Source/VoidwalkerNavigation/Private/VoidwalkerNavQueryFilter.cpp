@@ -62,9 +62,6 @@ void UVoidwalkerNavigationQueryFilter::InitializeFilter(const ANavigationData& N
 {
 	if (NavData.GetClass()->IsChildOf(AVoidwalkerNavData::StaticClass()))
 	{
-		FSharedNavQueryFilter NavQueryFilter = NavData.GetDefaultQueryFilter()->GetCopy();
-		NavQueryFilter->SetMaxSearchNodes(MaxPathSearchNodes);
-
 		Filter.SetFilterType<FVoidwalkerNavQueryFilter>();
 		if (FVoidwalkerNavQueryFilter* NavFilterImpl = static_cast<FVoidwalkerNavQueryFilter*>(Filter.GetImplementation()))
 		{

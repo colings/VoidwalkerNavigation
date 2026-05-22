@@ -130,7 +130,7 @@ public:
 	const FVoidwalkerNavQueryConstraints& GetConstraints() const { return Constraints; }
 	void SetConstraints(const FVoidwalkerNavQueryConstraints& NewConstraints) { Constraints = NewConstraints; }
 
-	// If valid, called every time a node is visited. Returning false form this function
+	// If valid, called every time a node is visited. Returning false from this function
 	// will stop the search.
 	TFunction<bool(NavNodeRef)> OnNodeVisited;
 
@@ -150,7 +150,7 @@ class VOIDWALKERNAVIGATION_API UVoidwalkerNavigationQueryFilter : public UNaviga
 	GENERATED_BODY()
 
 public:
-	// Sets the maximum number of nodes that the pathing algorithm is allow to expand
+	// Sets the maximum number of nodes that the pathing algorithm is allowed to expand
 	// before returning a partial path (or failing if partial paths are not allowed).
 	//
 	// NOTE: This can affect performance if set too high. Be sure to test performance

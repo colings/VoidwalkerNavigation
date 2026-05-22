@@ -15,9 +15,11 @@
 
 class FVoidwalkerNavigation : public IModuleInterface
 {
+public:
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
 
+private:
 #if WITH_EDITOR
 	void ModifyCookDelegate(TConstArrayView<const ITargetPlatform*> InTargetPlatforms, TArray<FName>& InOutPackagesToCook, TArray<FName>& InOutPackagesToNeverCook);
 #endif

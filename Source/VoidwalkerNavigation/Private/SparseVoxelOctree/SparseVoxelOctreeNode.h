@@ -6,6 +6,7 @@
 #include "VoidwalkerNavigationCustomVersion.h"
 #include "SparseVoxelOctreeCommon.h"
 
+// A reference to a node in an SVO tile.
 struct FSvoNodeLinkBase
 {
 	// TODO: Remove the extra bit from VOXELIDX_SIZE and move it to the USERDATA_SIZE.
@@ -61,6 +62,7 @@ struct FSvoNodeLinkBase
 	bool IsVoxelNode() const { return IsLeafNode() && VoxelIdx != SVO_NO_VOXEL; }
 };
 
+// A full reference to an SVO node, including the tile it's contained in
 struct FSvoNodeLink : FSvoNodeLinkBase
 {
 	uint32 TileID;

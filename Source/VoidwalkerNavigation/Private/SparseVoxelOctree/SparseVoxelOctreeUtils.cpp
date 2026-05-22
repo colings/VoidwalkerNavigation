@@ -128,7 +128,7 @@ uint32 FSvoUtils::NextMorton(uint32 Code, uint32 MinCode, uint32 MaxCode)
 
 	uint32 BigMin = 0;
 
-	const uint32 AxisMasks[] = { MORTON_X_MASK, MORTON_Y_MASK, MORTON_Z_MASK };
+	constexpr uint32 AxisMasks[] = { MORTON_X_MASK, MORTON_Y_MASK, MORTON_Z_MASK };
 
 	for (int32 CurBit = 29; CurBit >= 0; --CurBit)
 	{
@@ -139,16 +139,13 @@ uint32 FSvoUtils::NextMorton(uint32 Code, uint32 MinCode, uint32 MaxCode)
 
 		if (!CodeSet && !MinSet && MaxSet)
 		{
-			// Compute a mask of just the bits for the current axis that are lower than
-			// our current bit
+			// Compute a mask of just the bits for the current axis that are lower than our current bit
 			const uint32 LowerAxisBits = ((Mask - 1) & AxisMasks[CurBit % 3]);
 
-			// Set BigMin to min with all the bits for this axis below the current bit
-			// cleared
+			// Set BigMin to min with all the bits for this axis below the current bit cleared
 			BigMin = (MinCode & ~LowerAxisBits) | Mask;
 
-			// Set all the bits for this axis below the current one in MaxCode, and clear
-			// the current bit
+			// Set all the bits for this axis below the current one in MaxCode, and clear the current bit
 			MaxCode = (MaxCode | LowerAxisBits) & ~Mask;
 		}
 		else if (CodeSet && !MinSet && MaxSet)
@@ -175,4 +172,3 @@ uint32 FSvoUtils::NextMorton(uint32 Code, uint32 MinCode, uint32 MaxCode)
 
 	return BigMin;
 }
-

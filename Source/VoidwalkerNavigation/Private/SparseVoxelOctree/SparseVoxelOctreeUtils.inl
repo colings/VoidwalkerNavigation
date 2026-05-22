@@ -91,10 +91,9 @@ void FSvoNeighborIteratorBase<TOctree, TTile, TNode>::UpdateNeighbor()
 		NeighborLink = Node->GetNeighborLink(Octree, Neighbor);
 		NeighborNode = Octree.GetNodeFromLink(NeighborLink);
 
-		// If we're moving from a voxel one leaf node to another voxel on a another leaf
-		// node, return the exact voxel neighbor if the leaf is only partially blocked.
-		// Otherwise, just return the leaf node, since technically that's the highest
-		// resolution.
+		// If we're moving from a voxel one leaf node to another voxel on another leaf node, return the exact voxel
+		// neighbor if the leaf is only partially blocked. Otherwise, just return the leaf node, since technically
+		// that's the highest resolution.
 		if (NodeLink.IsVoxelNode())
 		{
 			if (NeighborNode != nullptr && NeighborLink.IsLeafNode())
